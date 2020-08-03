@@ -5,7 +5,7 @@ const typeDefs = gql`
     tokenConnect(token: String): User
     get(objectType: String!, _id: ID): [Object]
     tagsGet(lang: String): [Tag]
-    wordsGet(lang: String, tag: String): [Word]
+    wordsGet(lang: String, tag: TagInput): [Word]
   }
   type Mutation {
     signin(
@@ -118,6 +118,7 @@ const typeDefs = gql`
     name: String
   }
   input TagInput {
+    _id: String
     lang: String
     name: String
   }

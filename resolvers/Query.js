@@ -35,7 +35,11 @@ const wordsGet = async (parent, args) => {
   try {
     let words;
     if (args.lang) {
-      words = await models.word.find({ lang: args.lang });
+      if (args.tag._id) {
+        words = await models.word.find({ lang: args.lang, tags: args.tag });
+      } else {
+        words = await models.word.find({ lang: args.lang });
+      }
     } else {
       words = await models.word.find();
     }

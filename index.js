@@ -7,7 +7,7 @@ const Mutation = require("./resolvers/Mutation");
 
 const userGet = require("./functions/User/userGet");
 
-mongoose.connect("mongodb://localhost/girasol", {
+mongoose.connect(process.env.ATLAS || "mongodb://localhost/girasol", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
