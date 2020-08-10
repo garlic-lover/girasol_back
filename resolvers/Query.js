@@ -1,19 +1,37 @@
 const models = require("../models");
 
-const userGet = require("../functions/User/userGet");
-
-const get = async (parent, args, context, info) => {
-  let get = "";
-  if (get.status === "victory") {
-    return get.list;
-  } else {
-    return "fail";
+const connect = async (parent, args, context) => {
+  try {
+    if (context.user !== "user not found") {
+      context.user.connectedStatus = true;
+      let user;
+      if (context.user.isProf === false) {
+        user = await models.user.findById(context.user._id).populate("courses");
+      } else {
+        user = await models.user
+          .findById(context.user._id)
+          .populate("students");
+      }
+      return user;
+    } else {
+      return { connectedStatus: false };
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
-const tokenConnect = async (parent, args) => {
-  let user = await userGet(args.token);
-  return user;
+const pendingStudentsGet = async (parent, args, context) => {
+  if (context.user !== "user not found") {
+    // let user = await (await models.user.findById(context.user._id)).populate("pendingStudents");
+    let pending = await models.course.find({
+      _id: { $in: context.user.pendingStudents },
+    });
+    console.log(pending);
+    return pending;
+  } else {
+    return [];
+  }
 };
 
 const tagsGet = async (parent, args) => {
@@ -50,9 +68,21 @@ const wordsGet = async (parent, args) => {
   }
 };
 
+const exercicesGet = async (parent, args, context) => {
+  if (context.user !== "user not found") {
+    let theUser = await models.user
+      .findById(context.user._id)
+      .populate("exercices");
+    console.log(theUser);
+    return theUser.exercices;
+  }
+  return [];
+};
+
 module.exports = {
-  get,
-  tokenConnect,
+  connect,
   tagsGet,
   wordsGet,
+  exercicesGet,
+  pendingStudentsGet,
 };

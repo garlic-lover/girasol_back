@@ -3,8 +3,8 @@ const signinCheck = require("./signinCheck");
 const stripe = require("../Stripe/stripeFunctions");
 
 const models = require("../../models");
-
 const User = models.user;
+const Course = models.course;
 
 const signinFunction = async (params) => {
   try {
@@ -35,17 +35,35 @@ const signinFunction = async (params) => {
       signinDate: today,
       myLanguage: params.myLanguage,
       learnedLanguage: params.learnedLanguage,
+      courseName: params.courseName,
+      isProf: params.isProf,
       lastLogin: today,
       token: token,
       salt: salt,
       hash: hash,
     };
-    console.log(userData);
+    let course;
+    if (params.code !== "") {
+      course = await Course.findOne({ code: params.code });
+      if (course) {
+        userData.courses = [course._id];
+      }
+    }
+
     if (process.env.STRIPE_ACTIVATE === true) {
       const stripeData = await stripe.accountCreate(userData);
       userData.stripeData = stripeData;
     }
     const user = await new User(userData).save();
+    if (course && course._id) {
+      let professor = await User.findOne({ pendingStudents: course._id });
+      let theIndex = professor.pendingStudents.indexOf(params.code);
+      professor.pendingStudents.splice(theIndex, 1);
+      professor.students.push(user._id);
+      course.studentName = user.firstName + " " + user.lastName;
+      await Promise.all([professor.save(), course.save()]);
+    }
+
     return {
       status: "victory",
       user,

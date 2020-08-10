@@ -4,7 +4,7 @@ const signinCheck = (fields) => {
   // Check if all fields are filled
   let empty = false;
   for (let i = 0; i < tab.length; i++) {
-    if (fields[tab[i]] === "") {
+    if (fields[tab[i]] === "" && tab[i] !== "code" && tab[i] !== "courseName") {
       empty = true;
     }
   }

@@ -57,6 +57,28 @@ const User = mongoose.model("User", {
     type: String,
     default: "",
   },
+  courseName: {
+    type: String,
+  },
+  isProf: {
+    type: Boolean,
+  },
+  exercices: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Exercice" }],
+    default: [],
+  },
+  pendingStudents: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+    default: [],
+  },
+  students: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+    default: [],
+  },
+  courses: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+    default: [],
+  },
 });
 
 const Word = mongoose.model("Word", {
@@ -95,9 +117,40 @@ const List = mongoose.model("List", {
   },
 });
 
+const Exercice = mongoose.model("Exercice", {
+  type: {
+    type: String,
+  },
+  isPublic: {
+    type: Boolean,
+  },
+  title: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+  content: {
+    type: Object,
+  },
+});
+
+const Course = mongoose.model("Course", {
+  name: { type: String, default: "My awesome course" },
+  studentName: { type: String, default: "pending" },
+  professorName: { type: String, default: "" },
+  professor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  student: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  code: {
+    type: String,
+  },
+});
+
 module.exports = {
   user: User,
   word: Word,
   tag: Tag,
   list: List,
+  exercice: Exercice,
+  course: Course,
 };

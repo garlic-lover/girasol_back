@@ -25,9 +25,10 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
-    const token = req.headers.authorization || "";
-    const user = userGet(token);
+  context: async ({ req }) => {
+    let token = req.headers.authorization || "";
+    token = token.replace("Bearer ", "");
+    const user = await userGet(token);
     return { user };
   },
 });

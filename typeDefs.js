@@ -2,10 +2,12 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
   type Query {
-    tokenConnect(token: String): User
+    connect: User
     get(objectType: String!, _id: ID): [Object]
     tagsGet(lang: String): [Tag]
     wordsGet(lang: String, tag: TagInput): [Word]
+    exercicesGet: [Exercice]
+    pendingStudentsGet: [Course]
   }
   type Mutation {
     signin(
@@ -16,6 +18,9 @@ const typeDefs = gql`
       dateOfBirth: String
       myLanguage: String
       learnedLanguage: String
+      courseName: String
+      isProf: Boolean
+      code: String
     ): AuthReturn
     login(email: String!, password: String!): AuthReturn
     profileUpdate(
@@ -26,8 +31,15 @@ const typeDefs = gql`
       lastName: String
       dateOfBirth: String
     ): AuthReturn
+    studentCreate: String
     tagAdd(tags: [TagInput]): [Tag]
     wordAdd(word: WordInput): String
+    holeTextAdd(
+      title: String
+      description: String
+      parsedText: [[String]]
+      holes: [HoleInput]
+    ): String
   }
   type AuthReturn {
     status: String
@@ -48,6 +60,7 @@ const typeDefs = gql`
   }
   type User {
     _id: ID
+    connectedStatus: Boolean
     firstName: String
     lastName: String
     dateOfBirth: String
@@ -58,6 +71,9 @@ const typeDefs = gql`
     cardData: CreditCard
     myLanguage: String
     learnedLanguage: String
+    isProf: Boolean
+    courses: [Course]
+    students: [Student]
   }
   type Address {
     firstName: String!
@@ -66,6 +82,24 @@ const typeDefs = gql`
     postalCode: String!
     city: String!
     country: String!
+  }
+  type Professor {
+    _id: String
+    courseName: String
+    firstName: String
+    lastName: String
+  }
+  type Student {
+    _id: String
+    firstName: String
+    lastName: String
+  }
+  type Course {
+    _id: ID
+    name: String
+    studentName: String
+    professorName: String
+    code: String
   }
   input AddressInput {
     firstName: String!
@@ -121,6 +155,21 @@ const typeDefs = gql`
     _id: String
     lang: String
     name: String
+  }
+  type Exercice {
+    _id: String
+    title: String
+    type: String
+  }
+  input HoleText {
+    parsedText: [[String]]
+    holes: [HoleInput]
+  }
+  input HoleInput {
+    word: String
+    index: String
+    tip: String
+    response: String
   }
 `;
 
