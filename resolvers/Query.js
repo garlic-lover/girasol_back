@@ -79,10 +79,39 @@ const exercicesGet = async (parent, args, context) => {
   return [];
 };
 
+const holeTextGet = async (parent, args) => {
+  try {
+    let Ex = await models.exercice.findById(args.ex_id);
+    if (Ex) {
+      console.log(Ex);
+      return {
+        title: Ex.title,
+        description: Ex.description,
+        parsedText: Ex.content.parsedText,
+        holes: Ex.content.holes,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+const courseGet = async(parent, args)=>{
+  try{
+  let course = await models.course.findById(args._id);
+  return course ;
+  }  catch(error){
+    return console.log(error)
+  }
+}
+
 module.exports = {
   connect,
   tagsGet,
   wordsGet,
   exercicesGet,
   pendingStudentsGet,
+  holeTextGet,
+  courseGet
 };

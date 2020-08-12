@@ -59,7 +59,7 @@ const signinFunction = async (params) => {
       let professor = await User.findOne({ pendingStudents: course._id });
       let theIndex = professor.pendingStudents.indexOf(params.code);
       professor.pendingStudents.splice(theIndex, 1);
-      professor.students.push(user._id);
+      professor.students.push(course._id);
       course.studentName = user.firstName + " " + user.lastName;
       await Promise.all([professor.save(), course.save()]);
     }

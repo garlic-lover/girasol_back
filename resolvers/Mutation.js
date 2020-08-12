@@ -1,3 +1,5 @@
+const pubsub = require("../index");
+
 const signinFunction = require("../functions/User/signin");
 const loginFunction = require("../functions/User/login");
 const studentCreateFunction = require("../functions/Student/studentCreate");
@@ -86,3 +88,9 @@ module.exports = {
   holeTextAdd,
   studentCreate,
 };
+
+/* 
+
+pubsub.publish('responseAdded', { holes: []})
+
+*/

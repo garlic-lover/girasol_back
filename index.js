@@ -1,9 +1,16 @@
 const { ApolloServer } = require("apollo-server");
+
 const mongoose = require("mongoose");
 
 const typeDefs = require("./typeDefs");
 const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");
+const Subscription = require("./resolvers/Subscription");
+
+const { PubSub } = require("graphql-subscriptions");
+
+const pubsub = new PubSub();
+module.exports = pubsub;
 
 const userGet = require("./functions/User/userGet");
 
@@ -20,16 +27,22 @@ const resolvers = {
   },
   Query,
   Mutation,
+  Subscription,
 };
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }) => {
-    let token = req.headers.authorization || "";
-    token = token.replace("Bearer ", "");
-    const user = await userGet(token);
-    return { user };
+  context: async ({ req, connection }) => {
+    if (connection) {
+      // check connection for metadata
+      return connection.context;
+    } else {
+      let token = req.headers.authorization || "";
+      token = token.replace("Bearer ", "");
+      const user = await userGet(token);
+      return { user };
+    }
   },
 });
 
