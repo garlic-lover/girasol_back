@@ -1,4 +1,4 @@
-const pubsub = require("../index");
+const pubsub = require("../pubSub");
 
 const signinFunction = require("../functions/User/signin");
 const loginFunction = require("../functions/User/login");
@@ -6,6 +6,8 @@ const studentCreateFunction = require("../functions/Student/studentCreate");
 const tagAddFunction = require("../functions/WordsManagement/tagAdd");
 const wordAddFunction = require("../functions/WordsManagement/wordAdd");
 const holeTextAddFunction = require("../functions/Exercices/HoleTextAdd");
+const liveExerciceChangeFunction = require("../functions/Exercices/LiveExChange");
+const liveHoleEx = require("../functions/Exercices/liveHoleEx");
 
 const signin = async (parent, args) => {
   let hasSignedIn = await signinFunction(args);
@@ -79,6 +81,47 @@ const holeTextAdd = async (parent, args, context) => {
   return "You have to be connected to create an exercice";
 };
 
+const liveExerciceChange = async (parent, args) => {
+  try {
+    let res = await liveExerciceChangeFunction(args);
+    if (res === "victory") {
+      pubsub.publish("liveExerciceChanged", {
+        liveExerciceGet: {
+          ex_id: args.ex_id,
+          isOn: args.isOn,
+        },
+      });
+
+      return "victory";
+    }
+    return "error";
+  } catch (error) {
+    console.log(error);
+    return "error";
+  }
+};
+
+const liveHoleTextRespond = async (parent, args) => {
+  // let res = await liveHoleEx(args.course_id, args.holes);
+  console.log(args.holes);
+  pubsub.publish("holeTextChanged", {
+    liveHoleTextGet: {
+      holes: args.holes,
+    },
+  });
+  return "victory";
+  if (res.status === "victory") {
+    pubsub.publish("holeTextChanged", {
+      holeTextGet: {
+        holes: res.holes,
+      },
+    });
+    return "victory";
+  } else {
+    return "error";
+  }
+};
+
 module.exports = {
   signin,
   login,
@@ -87,10 +130,6 @@ module.exports = {
   wordAdd,
   holeTextAdd,
   studentCreate,
+  liveExerciceChange,
+  liveHoleTextRespond,
 };
-
-/* 
-
-pubsub.publish('responseAdded', { holes: []})
-
-*/

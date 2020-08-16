@@ -1,7 +1,17 @@
-const pubsub = require("../index");
+const pubsub = require("../pubSub");
 
-const holeTextResponse = {
-  subscribe: () => pubsub.asyncIterator("responseAdded"),
+const liveExerciceGet = {
+  subscribe: () => {
+    const asyncIterator = pubsub.asyncIterator("liveExerciceChanged");
+    return asyncIterator;
+  },
 };
 
-module.exports = { holeTextResponse };
+const liveHoleTextGet = {
+  subscribe: () => {
+    const asyncIterator = pubsub.asyncIterator("holeTextChanged");
+    return asyncIterator;
+  },
+};
+
+module.exports = { liveExerciceGet, liveHoleTextGet };

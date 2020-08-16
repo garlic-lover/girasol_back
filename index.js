@@ -7,11 +7,6 @@ const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");
 const Subscription = require("./resolvers/Subscription");
 
-const { PubSub } = require("graphql-subscriptions");
-
-const pubsub = new PubSub();
-module.exports = pubsub;
-
 const userGet = require("./functions/User/userGet");
 
 mongoose.connect(process.env.ATLAS || "mongodb://localhost/girasol", {

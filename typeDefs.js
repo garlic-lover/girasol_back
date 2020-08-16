@@ -8,7 +8,8 @@ const typeDefs = gql`
     wordsGet(lang: String, tag: TagInput): [Word]
     exercicesGet: [Exercice]
     pendingStudentsGet: [Course]
-    courseGet(_id : String!): Course
+    studentsGet: [Course]
+    courseGet(_id: String!): Course
     holeTextGet(ex_id: String): HoleText
   }
   type Mutation {
@@ -42,10 +43,12 @@ const typeDefs = gql`
       parsedText: [[String]]
       holes: [HoleInput]
     ): String
-    liveExerciceChange(course_id : String, ex_id : String, isOn : Boolean) : Exercice
+    liveExerciceChange(course_id: String, ex_id: String, isOn: Boolean): String
+    liveHoleTextRespond(course_id: String, holes: [HoleInput]): String
   }
   type Subscription {
-    holeTextResponse(ex_id: String): [Hole]
+    liveExerciceGet(course_id: String): LiveExercice
+    liveHoleTextGet(course_id: String): HoleText
   }
   type AuthReturn {
     status: String
@@ -165,6 +168,11 @@ const typeDefs = gql`
   type Exercice {
     _id: String
     title: String
+    type: String
+  }
+  type LiveExercice {
+    ex_id: String
+    isOn: Boolean
     type: String
   }
   input HoleTextInput {

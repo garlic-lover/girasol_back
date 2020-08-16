@@ -144,8 +144,12 @@ const Course = mongoose.model("Course", {
   code: {
     type: String,
   },
-  liveExercice : {ex : { type: mongoose.Schema.Types.ObjectId, ref: "Exercice" }, 
-  isOn: {type : Boolean, default : false}}
+  liveExercice: {
+    ex: { type: mongoose.Schema.Types.ObjectId, ref: "Exercice" },
+    isOn: { type: Boolean, default: false },
+    type: { type: String },
+    responses: { type: Object },
+  },
 });
 
 module.exports = {

@@ -21,14 +21,18 @@ const connect = async (parent, args, context) => {
   }
 };
 
-const pendingStudentsGet = async (parent, args, context) => {
+const studentsGet = async (parent, args, context) => {
   if (context.user !== "user not found") {
+    let array = context.user.pendingStudents;
+    array = array.concat(context.user.students);
+    console.log(array);
     // let user = await (await models.user.findById(context.user._id)).populate("pendingStudents");
-    let pending = await models.course.find({
-      _id: { $in: context.user.pendingStudents },
+    let students = await models.course.find({
+      _id: { $in: array },
     });
-    console.log(pending);
-    return pending;
+
+    console.log(students);
+    return students;
   } else {
     return [];
   }
@@ -73,7 +77,6 @@ const exercicesGet = async (parent, args, context) => {
     let theUser = await models.user
       .findById(context.user._id)
       .populate("exercices");
-    console.log(theUser);
     return theUser.exercices;
   }
   return [];
@@ -83,7 +86,6 @@ const holeTextGet = async (parent, args) => {
   try {
     let Ex = await models.exercice.findById(args.ex_id);
     if (Ex) {
-      console.log(Ex);
       return {
         title: Ex.title,
         description: Ex.description,
@@ -97,21 +99,21 @@ const holeTextGet = async (parent, args) => {
   }
 };
 
-const courseGet = async(parent, args)=>{
-  try{
-  let course = await models.course.findById(args._id);
-  return course ;
-  }  catch(error){
-    return console.log(error)
+const courseGet = async (parent, args) => {
+  try {
+    let course = await models.course.findById(args._id);
+    return course;
+  } catch (error) {
+    return console.log(error);
   }
-}
+};
 
 module.exports = {
   connect,
   tagsGet,
   wordsGet,
   exercicesGet,
-  pendingStudentsGet,
+  studentsGet,
   holeTextGet,
-  courseGet
+  courseGet,
 };
