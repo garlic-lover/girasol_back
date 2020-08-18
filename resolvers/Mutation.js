@@ -6,6 +6,7 @@ const studentCreateFunction = require("../functions/Student/studentCreate");
 const tagAddFunction = require("../functions/WordsManagement/tagAdd");
 const wordAddFunction = require("../functions/WordsManagement/wordAdd");
 const holeTextAddFunction = require("../functions/Exercices/HoleTextAdd");
+const linkedPropsAddFunction = require("../functions/Exercices/LinkedPropsAdd");
 const liveExerciceChangeFunction = require("../functions/Exercices/LiveExChange");
 const liveHoleEx = require("../functions/Exercices/liveHoleEx");
 
@@ -81,11 +82,20 @@ const holeTextAdd = async (parent, args, context) => {
   return "You have to be connected to create an exercice";
 };
 
+const linkedPropsAdd = async (parent, args, context) => {
+  if (context.user !== "user not found") {
+    let isAdded = await linkedPropsAddFunction(args, context.user);
+    return isAdded;
+  }
+  return "You have to be connected to create an exercice";
+};
+
 const liveExerciceChange = async (parent, args) => {
   try {
     let res = await liveExerciceChangeFunction(args);
     if (res === "victory") {
       pubsub.publish("liveExerciceChanged", {
+        course_id: args.course_id,
         liveExerciceGet: {
           ex_id: args.ex_id,
           isOn: args.isOn,
@@ -105,6 +115,7 @@ const liveHoleTextRespond = async (parent, args) => {
   // let res = await liveHoleEx(args.course_id, args.holes);
   console.log(args.holes);
   pubsub.publish("holeTextChanged", {
+    course_id: args.course_id,
     liveHoleTextGet: {
       holes: args.holes,
     },
@@ -129,6 +140,7 @@ module.exports = {
   tagAdd,
   wordAdd,
   holeTextAdd,
+  linkedPropsAdd,
   studentCreate,
   liveExerciceChange,
   liveHoleTextRespond,

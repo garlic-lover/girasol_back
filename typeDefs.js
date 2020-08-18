@@ -43,6 +43,11 @@ const typeDefs = gql`
       parsedText: [[String]]
       holes: [HoleInput]
     ): String
+    linkedPropsAdd(
+      title: String
+      description: String
+      words: [LinkedPropInput]
+    ): String
     liveExerciceChange(course_id: String, ex_id: String, isOn: Boolean): String
     liveHoleTextRespond(course_id: String, holes: [HoleInput]): String
   }
@@ -198,6 +203,15 @@ const typeDefs = gql`
     index: String
     tip: String
     response: String
+  }
+  type LinkedProp {
+    _id: String
+    proposition: String
+    solution: String
+  }
+  input LinkedPropInput {
+    proposition: String
+    solution: String
   }
 `;
 
