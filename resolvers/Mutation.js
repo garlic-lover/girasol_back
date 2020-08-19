@@ -99,6 +99,7 @@ const liveExerciceChange = async (parent, args) => {
         liveExerciceGet: {
           ex_id: args.ex_id,
           isOn: args.isOn,
+          type: args.type,
         },
       });
 
@@ -133,6 +134,19 @@ const liveHoleTextRespond = async (parent, args) => {
   }
 };
 
+const liveLinkedPropsRespond = async (parent, args) => {
+  console.log(args.holes);
+  pubsub.publish("linkedPropsChanged", {
+    course_id: args.course_id,
+    liveLinkedPropsGet: {
+      theWordsLeft: args.theWordsLeft,
+      theWordsRight: args.theWordsRight,
+      links: args.links,
+    },
+  });
+  return "victory";
+};
+
 module.exports = {
   signin,
   login,
@@ -144,4 +158,5 @@ module.exports = {
   studentCreate,
   liveExerciceChange,
   liveHoleTextRespond,
+  liveLinkedPropsRespond,
 };

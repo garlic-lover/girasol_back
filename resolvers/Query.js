@@ -99,6 +99,22 @@ const holeTextGet = async (parent, args) => {
   }
 };
 
+const linkedPropsGet = async (parent, args) => {
+  try {
+    let Ex = await models.exercice.findById(args.ex_id);
+    if (Ex) {
+      return {
+        title: Ex.title,
+        description: Ex.description,
+        words: Ex.content.words,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 const courseGet = async (parent, args) => {
   try {
     let course = await models.course.findById(args._id);
@@ -115,5 +131,6 @@ module.exports = {
   exercicesGet,
   studentsGet,
   holeTextGet,
+  linkedPropsGet,
   courseGet,
 };

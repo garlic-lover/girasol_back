@@ -11,6 +11,7 @@ const typeDefs = gql`
     studentsGet: [Course]
     courseGet(_id: String!): Course
     holeTextGet(ex_id: String): HoleText
+    linkedPropsGet(ex_id: String): LinkedProps
   }
   type Mutation {
     signin(
@@ -48,12 +49,24 @@ const typeDefs = gql`
       description: String
       words: [LinkedPropInput]
     ): String
-    liveExerciceChange(course_id: String, ex_id: String, isOn: Boolean): String
+    liveExerciceChange(
+      course_id: String
+      ex_id: String
+      isOn: Boolean
+      type: String
+    ): String
     liveHoleTextRespond(course_id: String, holes: [HoleInput]): String
+    liveLinkedPropsRespond(
+      course_id: String
+      theWordsLeft: [RandomedLinkedPropInput]
+      theWordsRight: [RandomedLinkedPropInput]
+      links: [LinkInput]
+    ): String
   }
   type Subscription {
     liveExerciceGet(course_id: String): LiveExercice
     liveHoleTextGet(course_id: String): HoleText
+    liveLinkedPropsGet(course_id: String): LinkedPropsRandomized
   }
   type AuthReturn {
     status: String
@@ -204,6 +217,17 @@ const typeDefs = gql`
     tip: String
     response: String
   }
+  type LinkedProps {
+    _id: String
+    title: String
+    description: String
+    words: [LinkedProp]
+  }
+  input LinkedPropsInput {
+    title: String
+    description: String
+    words: [LinkedPropsInput]
+  }
   type LinkedProp {
     _id: String
     proposition: String
@@ -212,6 +236,39 @@ const typeDefs = gql`
   input LinkedPropInput {
     proposition: String
     solution: String
+  }
+  type LinkedPropsRandomized {
+    theWordsLeft: [RandomedLinkedProp]
+    theWordsRight: [RandomedLinkedProp]
+    links: [Link]
+  }
+  input LinkedPropsRandomizedInput {
+    theWords: [RandomedLinkedPropInput]
+    links: [LinkInput]
+  }
+  type RandomedLinkedProp {
+    value: String
+    position: Int
+    try: String
+    match: Int
+  }
+  input RandomedLinkedPropInput {
+    value: String
+    position: Int
+    try: String
+    match: Int
+  }
+  type Link {
+    left: RandomedLinkedProp
+    leftIndex: Int
+    right: RandomedLinkedProp
+    rightIndex: Int
+  }
+  input LinkInput {
+    left: RandomedLinkedPropInput
+    leftIndex: Int
+    right: RandomedLinkedPropInput
+    rightIndex: Int
   }
 `;
 
