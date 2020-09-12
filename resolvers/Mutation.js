@@ -9,6 +9,7 @@ const holeTextAddFunction = require("../functions/Exercices/HoleTextAdd");
 const linkedPropsAddFunction = require("../functions/Exercices/LinkedPropsAdd");
 const liveExerciceChangeFunction = require("../functions/Exercices/LiveExChange");
 const liveHoleEx = require("../functions/Exercices/liveHoleEx");
+const liveLinkedEx = require("../functions/Exercices/liveLinkedEx");
 
 const signin = async (parent, args) => {
   let hasSignedIn = await signinFunction(args);
@@ -135,13 +136,19 @@ const liveHoleTextRespond = async (parent, args) => {
 };
 
 const liveLinkedPropsRespond = async (parent, args) => {
-  console.log(args.holes);
+  console.log("args", args);
+  let isSaved = await liveLinkedEx(
+    args.course_id,
+    args.theWordsLeft,
+    args.theWordsRight,
+    args.links
+  );
   pubsub.publish("linkedPropsChanged", {
     course_id: args.course_id,
     liveLinkedPropsGet: {
-      theWordsLeft: args.theWordsLeft,
-      theWordsRight: args.theWordsRight,
-      links: args.links,
+      theWordsLeft: isSaved.theWordsLeft,
+      theWordsRight: isSaved.theWordsRight,
+      links: isSaved.links,
     },
   });
   return "victory";

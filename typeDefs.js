@@ -12,6 +12,7 @@ const typeDefs = gql`
     courseGet(_id: String!): Course
     holeTextGet(ex_id: String): HoleText
     linkedPropsGet(ex_id: String): LinkedProps
+    randomedLinkedPropsGet(course_id: String): LinkedPropsRandomized
   }
   type Mutation {
     signin(
@@ -238,11 +239,15 @@ const typeDefs = gql`
     solution: String
   }
   type LinkedPropsRandomized {
+    title: String
+    description: String
     theWordsLeft: [RandomedLinkedProp]
     theWordsRight: [RandomedLinkedProp]
     links: [Link]
   }
   input LinkedPropsRandomizedInput {
+    title: String
+    description: String
     theWords: [RandomedLinkedPropInput]
     links: [LinkInput]
   }

@@ -115,6 +115,30 @@ const linkedPropsGet = async (parent, args) => {
   }
 };
 
+const randomedLinkedPropsGet = async (parent, args) => {
+  try {
+    let Course = await (await models.course.findById(args.course_id))
+      .populate({
+        path: "liveExercice.ex",
+        model: "Exercice",
+      })
+      .execPopulate();
+    if (Course) {
+      console.log(Course);
+      return {
+        title: Course.liveExercice.ex.title,
+        description: Course.liveExercice.ex.description,
+        theWordsLeft: Course.liveExercice.responses.theWordsLeft,
+        theWordsRight: Course.liveExercice.responses.theWordsRight,
+        links: Course.liveExercice.responses.links,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 const courseGet = async (parent, args) => {
   try {
     let course = await models.course.findById(args._id);
@@ -133,4 +157,5 @@ module.exports = {
   holeTextGet,
   linkedPropsGet,
   courseGet,
+  randomedLinkedPropsGet,
 };
