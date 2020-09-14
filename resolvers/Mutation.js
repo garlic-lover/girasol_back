@@ -63,6 +63,30 @@ const studentCreate = async (parent, args, context) => {
   return "You have to be connected to add a student";
 };
 
+const studentDelete = async (parent, args, context) => {
+  if (context.user !== "user not found") {
+    let course = await models.course.findById(args._id);
+    if (course) {
+      let theIndex = context.user.students.indexOf(args._id);
+      if (theIndex !== -1) {
+        let newTab = [...context.user.students];
+        newTab.splice(theIndex, 1);
+        context.user.students = newTab;
+      }
+      let theIndexBis = context.user.pendingStudents.indexOf(args._id);
+      if (theIndexBis !== -1) {
+        let newTab = [...context.user.pendingStudents];
+        newTab.splice(theIndexBis, 1);
+        context.user.pendingStudents = newTab;
+      }
+      await Promise.all([course.remove(), context.user.save()]);
+      return "deleted";
+    }
+    return "fail";
+  }
+  return "You have to be connected to add a student";
+};
+
 const tagAdd = async (parent, args) => {
   let areAdded = await tagAddFunction(args.tags);
   if (areAdded === "error") {
@@ -183,4 +207,5 @@ module.exports = {
   liveHoleTextRespond,
   liveLinkedPropsRespond,
   liveMathChange,
+  studentDelete,
 };

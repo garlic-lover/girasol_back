@@ -37,6 +37,7 @@ const typeDefs = gql`
       dateOfBirth: String
     ): AuthReturn
     studentCreate: String
+    studentDelete(_id: String): String
     tagAdd(tags: [TagInput]): [Tag]
     wordAdd(word: WordInput): String
     holeTextAdd(
