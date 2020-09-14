@@ -55,6 +55,7 @@ const typeDefs = gql`
       ex_id: String
       isOn: Boolean
       type: String
+      mathLive: Boolean
     ): String
     liveHoleTextRespond(course_id: String, holes: [HoleInput]): String
     liveLinkedPropsRespond(
@@ -63,11 +64,13 @@ const typeDefs = gql`
       theWordsRight: [RandomedLinkedPropInput]
       links: [LinkInput]
     ): String
+    liveMathChange(course_id: String, string: String): String
   }
   type Subscription {
     liveExerciceGet(course_id: String): LiveExercice
     liveHoleTextGet(course_id: String): HoleText
     liveLinkedPropsGet(course_id: String): LinkedPropsRandomized
+    liveMathGet(course_id: String): String
   }
   type AuthReturn {
     status: String
@@ -128,6 +131,8 @@ const typeDefs = gql`
     studentName: String
     professorName: String
     code: String
+    liveMath: String
+    liveExercice: LiveExercice
   }
   input AddressInput {
     firstName: String!
@@ -193,6 +198,7 @@ const typeDefs = gql`
     ex_id: String
     isOn: Boolean
     type: String
+    mathLive: Boolean
   }
   input HoleTextInput {
     title: String

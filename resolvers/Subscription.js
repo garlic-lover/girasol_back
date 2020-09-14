@@ -37,4 +37,21 @@ const liveLinkedPropsGet = {
   ),
 };
 
-module.exports = { liveExerciceGet, liveHoleTextGet, liveLinkedPropsGet };
+const liveMathGet = {
+  subscribe: withFilter(
+    () => {
+      const asyncIterator = pubsub.asyncIterator("liveMathChanged");
+      return asyncIterator;
+    },
+    (payload, variables) => {
+      return payload.course_id === variables.course_id;
+    }
+  ),
+};
+
+module.exports = {
+  liveExerciceGet,
+  liveHoleTextGet,
+  liveLinkedPropsGet,
+  liveMathGet,
+};

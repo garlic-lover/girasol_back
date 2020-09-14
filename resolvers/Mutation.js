@@ -1,4 +1,5 @@
 const pubsub = require("../pubSub");
+const models = require("../models");
 
 const signinFunction = require("../functions/User/signin");
 const loginFunction = require("../functions/User/login");
@@ -101,6 +102,7 @@ const liveExerciceChange = async (parent, args) => {
           ex_id: args.ex_id,
           isOn: args.isOn,
           type: args.type,
+          mathLive: args.mathLive,
         },
       });
 
@@ -123,7 +125,7 @@ const liveHoleTextRespond = async (parent, args) => {
     },
   });
   return "victory";
-  if (res.status === "victory") {
+  /* if (res.status === "victory") {
     pubsub.publish("holeTextChanged", {
       holeTextGet: {
         holes: res.holes,
@@ -132,7 +134,7 @@ const liveHoleTextRespond = async (parent, args) => {
     return "victory";
   } else {
     return "error";
-  }
+  } */
 };
 
 const liveLinkedPropsRespond = async (parent, args) => {
@@ -154,6 +156,20 @@ const liveLinkedPropsRespond = async (parent, args) => {
   return "victory";
 };
 
+const liveMathChange = async (parent, args) => {
+  let theCourse = await models.course.findById(args.course_id);
+  if (theCourse) {
+    theCourse.liveMath = args.string;
+    console.log(theCourse);
+    await theCourse.save();
+  }
+  pubsub.publish("liveMathChanged", {
+    course_id: args.course_id,
+    liveMathGet: args.string,
+  });
+  return "victory";
+};
+
 module.exports = {
   signin,
   login,
@@ -166,4 +182,5 @@ module.exports = {
   liveExerciceChange,
   liveHoleTextRespond,
   liveLinkedPropsRespond,
+  liveMathChange,
 };
