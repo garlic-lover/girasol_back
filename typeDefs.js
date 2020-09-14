@@ -38,6 +38,7 @@ const typeDefs = gql`
     ): AuthReturn
     studentCreate: String
     studentDelete(_id: String): String
+    exDelete(_id: String): String
     tagAdd(tags: [TagInput]): [Tag]
     wordAdd(word: WordInput): String
     holeTextAdd(
